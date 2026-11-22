@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d33">
+  <meta name="description" content="Faculty development session on modern evaluation and assessment frameworks, with practical AI-assisted examples.">
+  <title>Modern Evaluation & Assessment Frameworks</title>
+  <style>
+    :root { color-scheme: light; --ink:#14213c;--muted:#59677e;--brand:#2463e3;--navy:#101d33;--cyan:#47d9d0;--page:#f5f8fe;--line:#dfe7f3;--white:#fff; }
+    * {box-sizing:border-box} html{scroll-behavior:smooth}body{margin:0;background:var(--page);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.65;font-size:17px}
+    button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:none}a:focus-visible,button:focus-visible{outline:3px solid #7caaff;outline-offset:3px}
+    .top{background:var(--navy);color:white;padding:17px max(5vw,24px);display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+    .identity{display:flex;gap:11px;align-items:center;font-weight:800;letter-spacing:.01em}.identity-mark{width:35px;height:35px;border-radius:11px;background:linear-gradient(145deg,var(--cyan),#398dff);display:grid;place-items:center;color:#081d38;font-weight:900}
+    .top-tag{font-size:13px;color:#adc7e7;border:1px solid #324966;border-radius:999px;padding:5px 12px}
+    .hero{background:radial-gradient(ellipse at 84% 15%,#254f84 0%,transparent 43%),linear-gradient(115deg,#101d33,#172c50);color:white;padding:76px max(5vw,24px) 78px;position:relative;overflow:hidden}.hero-inner{max-width:1130px;margin:auto}.eyebrow{font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#62e9dd;font-size:13px}.hero h1{font-size:clamp(38px,5.2vw,68px);line-height:1.09;max-width:910px;letter-spacing:-.045em;margin:16px 0 22px}.hero p{color:#cee0f6;font-size:20px;max-width:750px;margin:0}.hero-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:31px}.hero-meta span{border:1px solid #4a6284;border-radius:30px;padding:7px 14px;font-size:14px;color:#e2efff}
+    .shell{max-width:1230px;margin:0 auto;padding:42px 24px 100px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:34px}.sidebar{position:sticky;top:20px;align-self:start;background:white;border:1px solid var(--line);border-radius:19px;padding:20px;box-shadow:0 8px 32px #1b3a6920}.sidebar h2{font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 14px}.agenda{display:grid;gap:7px}.agenda-item{display:flex;gap:11px;align-items:flex-start;padding:12px;border-radius:12px;font-size:14px;line-height:1.4;color:#69768a}.agenda-item.active{background:#eaf1ff;color:#1648a8;font-weight:800}.agenda-num{font-weight:900;flex:0 0 20px}.agenda-item small{display:block;color:#7c8ba0;font-size:12px;margin-top:3px}.agenda-item.active small{color:#4770af}
+    main{min-width:0}.section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:23px;flex-wrap:wrap}.section-head h2{font-size:clamp(30px,3vw,43px);line-height:1.2;letter-spacing:-.035em;margin:8px 0}.kicker{color:#225acc;font-weight:800;letter-spacing:.09em;font-size:13px;text-transform:uppercase}.time{font-size:13px;font-weight:800;background:#dcecff;color:#1452ad;border-radius:999px;padding:8px 13px;white-space:nowrap}.lead{font-size:20px;color:#465a74;max-width:860px;margin:4px 0 32px}
+    h3{font-size:25px;letter-spacing:-.025em;margin:38px 0 17px}p{margin-top:0}.card{background:white;border:1px solid var(--line);border-radius:19px;padding:28px;box-shadow:0 8px 27px #284a7e0b}.card p:last-child{margin-bottom:0}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.card h4{margin:0 0 12px;font-size:21px}.pill{display:inline-block;padding:4px 12px;border-radius:99px;background:#edf1f7;color:#4c5d77;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}.pill.blue{background:#e5eeff;color:#1859c9}.clean{padding-left:21px;margin:10px 0 0}.clean li{padding:4px 0}.accent{border-top:5px solid var(--brand)}.subtle{border-top:5px solid #8798ae}
+    .types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.type{background:white;border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}.type-icon{height:46px;width:46px;border-radius:13px;display:grid;place-items:center;background:#eaf1ff;color:#1559cf;font-size:22px;margin-bottom:15px}.type h4{font-size:20px;margin:0 0 8px}.type p{font-size:15px;color:#586a82;margin:0 0 12px}.type .example{font-size:14px;background:#f2f6fd;border-radius:10px;padding:12px;color:#23466d}.tagline{font-size:13px;color:#2863d8;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+    .path{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.step{background:#eaf1fc;border-radius:15px;padding:19px 13px;min-height:132px}.step b{display:block;font-size:16px;margin:8px 0 5px}.step small{color:#5c6b82;font-size:13px}.step-number{font-size:13px;color:#2565d9;font-weight:900}
+    .example-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.example-grid .card{padding:23px}.bad-example{background:#fff5ef;border:1px solid #f2d8c8}.good-example{background:#effaf8;border:1px solid #c5e9e4}.label{font-size:12px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:#51617a}.example-grid strong{display:block;margin:8px 0}.note{background:#e9f5ff;border-left:5px solid #2473e0;padding:20px 24px;border-radius:0 14px 14px 0;margin:24px 0;color:#1b426d}
+    .question{background:#102443;color:#fff;border-radius:20px;padding:29px;margin-top:38px}.question h3{margin:5px 0 8px;font-size:26px}.question p{color:#c4d7ee}.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}.choice{text-align:left;padding:14px 16px;border:1px solid #567398;border-radius:12px;background:#1b365a;color:#f5faff;min-height:64px}.choice:hover{border-color:#6de4d5}.choice.selected{border-color:#66e4d4;background:#214f65}.choice strong{color:#71e9dc;margin-right:8px}.result{background:#e8f9f5;color:#123c3c;padding:15px 18px;border-radius:12px;margin-top:14px;display:none}.result.visible{display:block}.reveal{background:#61e2d2;border:0;border-radius:10px;padding:11px 17px;color:#0f2a42;font-weight:900}.reveal:disabled{opacity:.5;cursor:not-allowed}.question .micro{margin:14px 0 0;font-size:13px;color:#a7c2df}
+    .coming{margin-top:45px;padding:27px 30px;background:white;border:1px dashed #b3c6e0;border-radius:18px}.coming h3{margin:0 0 8px}.coming p{margin:0;color:#66768d}.footer{padding:26px 24px;text-align:center;background:#101d33;color:#b8cbe5;font-size:13px}
+    @media(max-width:900px){.shell{display:block;padding-top:26px}.sidebar{position:static;margin-bottom:30px}.agenda{grid-template-columns:repeat(2,minmax(0,1fr))}.types{grid-template-columns:1fr}.path{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.hero{padding:57px 22px}.hero p{font-size:17px}.shell{padding:25px 16px 75px}.card{padding:21px}.two,.example-grid,.choices{grid-template-columns:1fr}.agenda{grid-template-columns:1fr 1fr}.agenda-item{padding:9px;font-size:12px}.agenda-item small{font-size:11px}.question{padding:23px}.section-head h2{font-size:32px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="identity"><span class="identity-mark">A</span><span>ASSESSMENT LAB</span></div><span class="top-tag">Faculty Development Programme · Learning resource</span></header>
+  <section class="hero"><div class="hero-inner"><span class="eyebrow">Teaching · Learning · Evaluation</span><h1>Modern Evaluation &amp;<br>Assessment Frameworks</h1><p>Moving beyond marks: designing assessments that measure learning, provide timely feedback, and support continuous improvement.</p></div></section>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Session agenda"><h2>Session roadmap</h2><nav class="agenda">
+      <a class="agenda-item" href="index.html"><span class="agenda-num">01</span><span>Introduction to Modern Assessment Frameworks<small>5 min · Page 01</small></span></a>
+      <a class="agenda-item" href="page02.html"><span class="agenda-num">02</span><span>AI Capabilities &amp; Limitations<small>8 min · Page 02</small></span></a>
+      <a class="agenda-item" href="page03.html"><span class="agenda-num">03</span><span>AI-Powered Assessment Creation<small>12 min · Page 03</small></span></a>
+      <a class="agenda-item active" href="page04.html" aria-current="page"><span class="agenda-num">04</span><span>Evaluating AI Output<small>10 min · Current topic</small></span></a>
+      <div class="agenda-item"><span class="agenda-num">05</span><span>Responsible AI Assessment<small>8 min · Coming next</small></span></div>
+      <div class="agenda-item"><span class="agenda-num">06</span><span>Improving Assessment Quality<small>7 min · Coming next</small></span></div>
+      <div class="agenda-item"><span class="agenda-num">07</span><span>Activity, Poll &amp; Q&amp;A<small>10 min · Coming next</small></span></div>
+    </nav></aside>
+    <main id="topic04">
+<div class="section-head"><div><span class="kicker">Topic 04 · Review before use</span><h2>Evaluating AI Output</h2></div><span class="time">10 MIN</span></div>
+<p class="lead">An AI-generated assessment can look polished and still be inaccurate, incomplete, unsuitable or unfair. Evaluate against evidence, not appearance.</p>
+<h3>Why evaluation matters in modern assessment</h3>
+<div class="card accent"><p><strong>Imagine:</strong> AI generates five MCQs, a scenario question and a marking rubric. The language is clear, but one answer key is wrong and one important learning outcome is missing.</p><p><strong>Question for the audience:</strong> “Would you use these questions in an actual assessment without reviewing them?”</p></div>
+<h3>Discernment · Three checks for AI-generated assessments</h3>
+<p>Module 3 defines <strong>Discernment</strong> as reviewing output against <strong>requirements, source material and professional standards</strong>, rather than judging how convincing it looks.</p>
+<div class="types">
+<div class="type"><h4>01 · Accuracy</h4><p><strong>Is it correct?</strong> Verify facts, calculations, model answers and answer keys against reliable course material.</p><div class="example"><strong>Assessment example:</strong> AI marks an incorrect Python loop as the correct MCQ option. Correct the key before use.</div></div>
+<div class="type"><h4>02 · Completeness</h4><p><strong>Is anything important missing?</strong> Check every requested learning outcome, question, criterion and explanation.</p><div class="example"><strong>Assessment example:</strong> Five questions are supplied, but none assesses the specified Apply-level outcome.</div></div>
+<div class="type"><h4>03 · Fitness for Purpose</h4><p><strong>Does it work for the intended audience and goal?</strong> Review learner level, clarity, difficulty and whether the task measures the desired skill.</p><div class="example"><strong>Assessment example:</strong> A technically correct question is too advanced for first-year students.</div></div>
+</div>
+<div class="note"><strong>Key distinction:</strong> Accuracy ≠ Completeness. Every statement may be correct while a crucial requirement is still missing.</div>
+<h3>Recognise common failure patterns</h3>
+<div class="two">
+<article class="card"><h4>Hallucinations</h4><p>AI may generate plausible but unsupported claims, fabricated details or confident answers without evidence.</p><div class="example"><strong>Assessment example:</strong> An invented research citation is presented as the source for a question.</div><p><strong>Action:</strong> Verify references, statistics, answer keys and quotations using actual sources.</p></article>
+<article class="card"><h4>Bias</h4><p>AI output can reflect a one-sided framing or reinforce an assumption built into the prompt.</p><div class="example"><strong>Assessment example:</strong> A question assumes one viewpoint is correct without allowing evidence-based alternatives.</div><p><strong>Action:</strong> Check balanced wording, inclusivity and whether students can demonstrate learning fairly.</p></article>
+</div>
+<div class="card" style="margin-top:16px"><h4>Also check · Inconsistencies</h4><p>The answer key, explanation and rubric may contradict one another, even within the same polished output. Cross-check all parts before publishing.</p></div>
+<h3>Practical review · Spot the problem</h3>
+<div class="card"><span class="pill blue">Example · Python assessment</span><p><strong>Learning outcome:</strong> Write a <code>for</code> loop to process a list.</p><p><strong>AI-generated question:</strong> “What is the definition of a for-loop?”</p><p><strong>AI-generated explanation:</strong> “This question measures students' ability to apply loops to real data.”</p><p><strong>What is wrong?</strong> The question checks recall, not application. The explanation claims alignment that the question does not demonstrate.</p><p><strong>Improvement:</strong> “Given <code>[3, 5, 7]</code>, write a loop to calculate the total and explain the result.”</p></div>
+<h3>Evaluate using three fixed references</h3>
+<div class="path"><div class="step"><span class="step-number">01</span><b>Requirements</b><small>Learning outcomes, level, assessment instructions</small></div><div class="step"><span class="step-number">02</span><b>Sources</b><small>Approved syllabus, teaching notes, reliable references</small></div><div class="step"><span class="step-number">03</span><b>Standards</b><small>Marking quality, fairness, clarity and accessibility</small></div></div>
+<h3>Choose a review verdict</h3>
+<div class="types"><div class="type"><h4>Ready to Use</h4><p>Meets requirements, is supported by sources and fits the purpose.</p></div><div class="type"><h4>Needs Revision</h4><p>Usable direction, but a correctable error or omission remains.</p></div><div class="type"><h4>Needs Human Override</h4><p>Unverified, high-stakes or seriously unsuitable output requires human judgment before proceeding.</p></div></div>
+<p><strong>Stakes matter:</strong> High-stakes assessment decisions need more rigorous verification than low-stakes practice drafts. Educators retain final responsibility.</p>
+<h3>Fact-checking · Build verification into the prompt</h3>
+<div class="example">“Using only the attached syllabus and learning outcomes, review these assessment questions. For each item, check factual accuracy, outcome coverage, intended cognitive level and suitability for first-year students. Flag unsupported claims or missing information. Do not invent references. Return a table with Issue, Evidence and Suggested Revision.”</div>
+<p>Verification instructions can reduce unsupported output, but the AI's self-review is not a substitute for checking original sources and applying human judgment.</p>
+<div class="note"><strong>AI Fluency connection:</strong> <strong>Discernment</strong> is how we review AI output; <strong>Diligence</strong> is why we verify and remain accountable. Judge the output against requirements, sources and standards, then decide whether to use, revise or override it.</div>
+<h3>Suggested 10-minute delivery</h3>
+<div class="card"><p><strong>1 min</strong> · Opening assessment dilemma<br><strong>3 min</strong> · Accuracy, Completeness and Fitness for Purpose<br><strong>2 min</strong> · Hallucinations, Bias and Inconsistencies<br><strong>2 min</strong> · Spot-the-problem example<br><strong>2 min</strong> · Verification and review verdicts</p></div>
+<h3>Source and adaptation</h3>
+<div class="card"><p><strong>Course basis:</strong> <em>Evaluating &amp; Validating Claude's Output</em> (Module 3), including Discernment, Accuracy, Completeness, Fitness, Hallucinations, Inconsistencies, Bias, Fact-Checking and Human Review. The three evaluation references, stakes calibration and review verdicts follow the module.</p><p><strong>FDP adaptations:</strong> Python assessment questions, educational review criteria and example prompts were developed for this session and are not quoted from the source.</p></div>
+<section class="coming"><span class="kicker">Next · Topic 05</span><h3>Responsible AI Assessment</h3><p>Explore responsible use, transparency and human accountability in assessment decisions.</p></section>
+</main>
+  </div>
+  <footer class="footer">Modern Evaluation &amp; Assessment Frameworks · Faculty learning resource · Part 4 of 7</footer>
+
+</body>
+</html>
