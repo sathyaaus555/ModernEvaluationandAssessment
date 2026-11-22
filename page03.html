@@ -53,6 +53,16 @@
 <div class="type"><h4>Constraints</h4><p>What rules must it follow?</p><div class="example">“Target Apply level; no advanced Python features.”</div></div>
 <div class="type"><h4>Output Format</h4><p>How should results appear?</p><div class="example">“Use a table with answers and marking criteria.”</div></div>
 </div>
+<h3>Diagnosing a weak prompt · What happens when a component is missing?</h3>
+<p>The <em>Prompting &amp; Task Execution</em> module treats weak AI output as a clue to which prompt component needs improvement.</p>
+<div class="card"><table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left">Missing or unclear component</th><th style="text-align:left">Likely output problem</th><th style="text-align:left">Assessment design example</th></tr></thead><tbody>
+<tr><td><strong>Context</strong></td><td>Generic or off-base output</td><td>Questions ignore the learners' level or syllabus</td></tr>
+<tr><td><strong>Task</strong></td><td>Wrong action or question answered</td><td>AI writes explanations instead of the requested MCQs</td></tr>
+<tr><td><strong>Constraints</strong></td><td>Wrong length or tone</td><td>Questions do not follow the requested difficulty or scope</td></tr>
+<tr><td><strong>Output Format</strong></td><td>Wrong shape or presentation</td><td>Missing four-option structure, answer key or rubric table</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Diagnostic tip:</strong> Generic output → add context. Wrong action → clarify the task verb. Wrong length, tone or shape → specify constraints or output format. Fix the component that failed rather than rewriting the whole prompt.</div>
+<p><small><strong>Source:</strong> <em>Prompting &amp; Task Execution – Module 2</em>, “Diagnosing a Weak Prompt” and “Iterating Prompts to Improve Output.” Assessment examples are adaptations for this presentation. Not every prompt requires all five components; choose according to the task.</small></p>
 <h3>Prompt comparison · Vague vs specific</h3>
 <div class="example-grid">
 <article class="card bad-example"><span class="label">Vague prompt</span><strong>“Create some Python assessment questions.”</strong><p>Missing context and constraints can lead to generic questions or the wrong difficulty.</p></article>
