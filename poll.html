@@ -16,7 +16,7 @@
 </div>
 <section id="presenter" class="card hidden"><div class="row" style="justify-content:space-between"><h2>Presenter controls</h2><span class="pill">Host only</span></div>
 <div id="login"><p>Sign in using the presenter account configured in Firebase.</p><div class="row"><input id="email" type="email" placeholder="Presenter email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="sign-in" class="primary">Sign in</button></div></div>
-<div id="controls" class="hidden"><p class="muted">Launch a question after each topic. Participants stay on the same link; their screens update automatically.</p><div id="poll-list"></div><div class="row"><button id="close-poll" class="secondary">Close current poll</button><button id="sign-out" class="danger">Sign out</button></div></div>
+<div id="controls" class="hidden"><p class="muted">Participants see only the question you launch. Use End & hide poll after each topic to return their screen to Waiting for the presenter.</p><div id="poll-list"></div><div class="row"><button id="close-poll" class="secondary">Hide current poll</button><button id="sign-out" class="danger">Sign out</button></div></div>
 <p id="admin-error" class="small" role="alert"></p></section>
 <p class="foot">For training feedback only. Do not submit names, student records or sensitive information. Votes are stored under anonymous account identifiers; this is not a secure examination or one-person-one-vote identity system.</p>
 </div>
@@ -116,9 +116,9 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  const showAdmin=()=>{if(!isPresenter)return;$("login").classList.add("hidden");$("controls").classList.remove("hidden");const list=$("poll-list");list.replaceChildren();
   QUESTIONS.forEach(q=>{const card=document.createElement("div");card.className="poll-card";const t=document.createElement("strong");t.textContent=q.topic+" — "+q.q;
    const launch=document.createElement("button");launch.className="primary";launch.textContent=q.id==="topic07"?"Open final reflection":"Launch this poll";launch.onclick=()=>setCurrent({id:q.id,status:"open",resultsVisible:false});
-   const close=document.createElement("button");close.className="secondary";close.textContent=q.id==="topic07"?"Close reflections":"End voting";close.onclick=()=>setCurrent({id:q.id,status:"ended",resultsVisible:false});
+   const close=document.createElement("button");close.className="secondary";close.textContent=q.id==="topic07"?"Hide reflection":"End & hide poll";close.onclick=()=>setCurrent({id:q.id,status:"closed",resultsVisible:false});
    card.append(t,launch,document.createTextNode(" "),close);list.append(card)})};
- $("close-poll").onclick=()=>updateCurrent({status:"ended"});
+ $("close-poll").onclick=()=>{if(current?.id)updateCurrent({status:"closed"})};
  $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
  $("sign-out").onclick=()=>auth.signOut();
  auth.onAuthStateChanged(async u=>{
