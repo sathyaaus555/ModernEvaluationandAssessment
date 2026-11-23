@@ -65,7 +65,7 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
    const mine=user?.uid===PRESENTER_UID?null:commitments[user?.uid];
    $("learning-response").disabled=!!mine||current.status!=="open";
    $("commitment-submit").disabled=!!mine||current.status!=="open";
-   $("commitment-feedback").textContent=mine?"Thank you! Your two reflections were submitted.":current.status==="open"?"No names or student data, please.":"Submissions have closed.";
+   $("commitment-feedback").textContent=mine?"Thank you! Your two reflections were submitted.":current.status==="open"?"":"Submissions have closed.";
    if(user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" responses received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent=v;list.append(p)})}
    return;
   }
