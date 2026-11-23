@@ -16,9 +16,9 @@
 </div>
 <section id="presenter" class="card hidden"><div class="row" style="justify-content:space-between"><h2>Presenter controls</h2><span class="pill">Host only</span></div>
 <div id="login"><p>Sign in using the presenter account configured in Firebase.</p><div class="row"><input id="email" type="email" placeholder="Presenter email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="sign-in" class="primary">Sign in</button></div></div>
-<div id="controls" class="hidden"><p class="muted">Launch a question after each topic. Participants stay on the same link; their screens update automatically.</p><div id="poll-list"></div><div class="row"><button id="close-poll" class="secondary">Close current poll</button><button id="reveal" class="secondary">Show results to participants</button><button id="hide-results" class="secondary">Hide results</button><button id="sign-out" class="danger">Sign out</button></div></div>
+<div id="controls" class="hidden"><p class="muted">Launch a question after each topic. Participants stay on the same link; their screens update automatically.</p><div id="poll-list"></div><div class="row"><button id="close-poll" class="secondary">Close current poll</button><button id="sign-out" class="danger">Sign out</button></div></div>
 <p id="admin-error" class="small" role="alert"></p></section>
-<p class="foot">For training feedback only. Do not submit names, student records or sensitive information. Votes are anonymous to the presenter; this is not a secure examination or one-person-one-vote identity system.</p>
+<p class="foot">For training feedback only. Do not submit names, student records or sensitive information. Votes are stored under anonymous account identifiers; this is not a secure examination or one-person-one-vote identity system.</p>
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -36,6 +36,7 @@ const QUESTIONS=[
 {id:"topic07",topic:"Topic 07 · Final Reflection",q:"What is the educator's most important role when using AI for assessment?",options:["Accept the first AI output","Let AI assign all final grades without review","Design, verify and improve assessment quality","Remove all exams"]}
 ];
 const $=id=>document.getElementById(id);
+const PRESENTER_UID="4Tl4luSiUCN2KHBmtjUPA2jP1mA2";
 const isPresenter=new URLSearchParams(location.search).has("presenter");
 if(isPresenter)$("presenter").classList.remove("hidden");
 const conf=window.ASSESSMENT_POLL_FIREBASE;
@@ -56,20 +57,29 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
   const q=optionsFor(current.id);if(!q){say("Unknown question. Please refresh.");return}
   $("active").classList.remove("hidden");say(current.status==="open"?"Poll is live — please vote.":"This poll is closed.");
   $("topic").textContent=q.topic;$("question").textContent=q.q;$("phase").textContent=current.status==="open"?"Voting open":"Voting closed";
-  const oldChoice=selected;const myVote=user?allVotes[user.uid]:undefined;const box=$("choices");box.replaceChildren();
+  const oldChoice=selected;const myVote=user?(user.uid===PRESENTER_UID?undefined:allVotes[user.uid]):undefined;const box=$("choices");box.replaceChildren();
   q.options.forEach((option,i)=>{const b=document.createElement("button");b.type="button";b.className="option"+((myVote===String(i)||myVote===undefined&&oldChoice===String(i))?" selected":"");b.textContent=String.fromCharCode(65+i)+". "+option;
    b.disabled=!!myVote||current.status!=="open";b.onclick=()=>{selected=String(i);render()};box.append(b)});
   $("vote").disabled=!!myVote||selected===null||current.status!=="open";
   $("feedback").textContent=myVote!==undefined?"Your vote was submitted. Thank you!":current.status==="open"?"Choose one answer, then Submit vote.":"Voting has ended.";
-  const canSee=isPresenter&&$("controls").classList.contains("hidden")===false||!!current.resultsVisible;
+  const canSee=isPresenter&&user?.uid===PRESENTER_UID;
   $("results").classList.toggle("hidden",!canSee);
   if(canSee){const counts=q.options.map((_,i)=>Object.values(allVotes).filter(v=>v===String(i)).length),total=Object.values(allVotes).length;$("count").textContent=total+" vote"+(total===1?"":"s")+" received";
    const bars=$("bars");bars.replaceChildren();q.options.forEach((opt,i)=>{const row=document.createElement("div"),label=document.createElement("div"),bar=document.createElement("div"),fill=document.createElement("div");label.textContent=String.fromCharCode(65+i)+". "+opt+" — "+(total?Math.round(counts[i]*100/total):0)+"% ("+counts[i]+")";bar.className="bar";fill.className="fill";fill.style.width=(total?counts[i]*100/total:0)+"%";bar.append(fill);row.append(label,bar);bars.append(row)})}
  };
- let voteRef=null;
+ let voteRef=null, lastPollId=null;
  const subscribe=()=>{
-  db.ref("session/current").on("value",snap=>{const next=snap.val();if(voteRef)voteRef.off();voteRef=null;current=next;selected=null;allVotes={};
-   if(next?.id){voteRef=db.ref("votes/"+next.id);voteRef.on("value",s=>{allVotes=s.val()||{};render()},error)}render()},error);
+  db.ref("session/current").on("value",snap=>{const next=snap.val();
+   if(next?.id!==lastPollId){
+    if(voteRef)voteRef.off();voteRef=null;selected=null;allVotes={};lastPollId=next?.id||null;
+    if(next?.id){
+     const presenter=user?.uid===PRESENTER_UID;
+     voteRef=db.ref("votes/"+next.id+(presenter?"":"/"+user.uid));
+     voteRef.on("value",v=>{allVotes=presenter?(v.val()||{}):(v.exists()?{[user.uid]:v.val()}:{});render()},error);
+    }
+   }
+   current=next;render();
+  },error);
  };
  $("vote").onclick=async()=>{if(!current||selected===null||!user)return;const id=current.id,choice=selected;$("vote").disabled=true;
   try{const check=await db.ref("session/current").once("value");if(check.val()?.id!==id||check.val()?.status!=="open")throw Error("This poll is no longer open.");
@@ -82,12 +92,12 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
    const close=document.createElement("button");close.className="secondary";close.textContent="End voting";close.onclick=()=>setCurrent({id:q.id,status:"ended",resultsVisible:false});
    card.append(t,launch,document.createTextNode(" "),close);list.append(card)})};
  $("close-poll").onclick=()=>updateCurrent({status:"ended"});
- $("reveal").onclick=()=>updateCurrent({resultsVisible:true});
- $("hide-results").onclick=()=>updateCurrent({resultsVisible:false});
+ $("reveal").onclick=()=>{$("admin-error").textContent="Results are presenter-only. Share your screen if you want to show them."};
+ $("hide-results").onclick=()=>{$("admin-error").textContent="Results are already hidden from participants."};
  $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
  $("sign-out").onclick=()=>auth.signOut();
  auth.onAuthStateChanged(async u=>{
-  if(u){user=u;if(!subscribed){subscribed=true;subscribe()}$("loading").classList.add("hidden");$("session").classList.remove("hidden");if(isPresenter&&!u.isAnonymous)showAdmin();else if(isPresenter){$("login").classList.remove("hidden");$("controls").classList.add("hidden")};render();return}
+  if(u){user=u;if(!subscribed){subscribed=true;subscribe()}$("loading").classList.add("hidden");$("session").classList.remove("hidden");if(isPresenter&&u.uid===PRESENTER_UID)showAdmin();else if(isPresenter){$("login").classList.remove("hidden");$("controls").classList.add("hidden")};render();return}
   if(isPresenter){user=null;$("login").classList.remove("hidden");$("controls").classList.add("hidden");$("loading").classList.add("hidden");$("session").classList.add("hidden")}
   else{try{await auth.signInAnonymously()}catch(e){$("loading").classList.add("hidden");$("setup").classList.remove("hidden");$("setup").querySelector("p").textContent="Voting sign-in failed. The presenter may need to enable Anonymous authentication in Firebase. "+e.message}}
  });
