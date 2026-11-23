@@ -12,7 +12,7 @@
 <div id="session" class="hidden">
   <div id="status" class="message" role="status" aria-live="polite">Waiting for the first question…</div>
   <section id="active" class="card hidden"><div class="row"><span id="topic" class="pill"></span><span id="phase" class="small muted"></span></div><h2 id="question"></h2><div id="choices" class="options"></div><button id="vote" class="primary" disabled>Submit vote</button><p id="feedback" class="small muted" role="status" aria-live="polite"></p></section>
-  <section id="commitment" class="card hidden"><h2>My one-minute commitment</h2><p>Complete the sentence: <strong>From my next assessment, I will…</strong></p><textarea id="commitment-text" maxlength="240" rows="3" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit" placeholder="e.g. verify that AI-generated questions match the learning outcomes"></textarea><p><button id="commitment-submit" class="primary">Submit my commitment</button></p><p id="commitment-feedback" role="status"></p></section><section id="commitment-results" class="card hidden"><h2>Final commitments · Presenter only</h2><p id="commitment-count"></p><div id="commitment-list"></div></section><section id="results" class="card hidden"><h2>Live results</h2><p id="count" class="muted"></p><div id="bars"></div></section>
+  <section id="commitment" class="card hidden"><h2>Two things I learned today</h2><p>Share two useful things you learned from this session.</p><label for="learning-one"><strong>1. First thing I learned</strong></label><textarea id="learning-one" maxlength="110" rows="2" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit;margin:8px 0 18px"></textarea><label for="learning-two"><strong>2. Second thing I learned</strong></label><textarea id="learning-two" maxlength="110" rows="2" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit;margin:8px 0 12px"></textarea><p><button id="commitment-submit" class="primary">Submit my reflections</button></p><p id="commitment-feedback" role="status"></p></section><section id="commitment-results" class="card hidden"><h2>Two things learned · Presenter only</h2><p id="commitment-count"></p><div id="commitment-list"></div></section><section id="results" class="card hidden"><h2>Live results</h2><p id="count" class="muted"></p><div id="bars"></div></section>
 </div>
 <section id="presenter" class="card hidden"><div class="row" style="justify-content:space-between"><h2>Presenter controls</h2><span class="pill">Host only</span></div>
 <div id="login"><p>Sign in using the presenter account configured in Firebase.</p><div class="row"><input id="email" type="email" placeholder="Presenter email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="sign-in" class="primary">Sign in</button></div></div>
@@ -33,7 +33,7 @@ const QUESTIONS=[
 {id:"topic04",topic:"Topic 04 · Evaluating Output",q:"Which review criterion checks whether a question serves the intended learning outcome?",options:["Response length","Fitness for purpose","Fluency alone","Number of generated options"]},
 {id:"topic05",topic:"Topic 05 · Responsible AI",q:"Before putting student work into an AI tool, what is essential?",options:["Upload everything to save time","Remove identifiers and follow institutional data policies","Ask AI not to remember","Publish students' marks"]},
 {id:"topic06",topic:"Topic 06 · Improving Quality",q:"An AI-generated MCQ is too generic. What should we try first?",options:["Regenerate with no changes","Clarify the learning outcome, audience and constraints","Immediately change the AI model","Use the question unchanged"]},
-{id:"topic07",topic:"Topic 07 · Final Commitment",q:"From my next assessment, I will…",options:[]}
+{id:"topic07",topic:"Topic 07 · Final Reflection",q:"Two things I learned today",options:[]}
 ];
 const $=id=>document.getElementById(id);
 const PRESENTER_UID="4Tl4luSiUCN2KHBmtjUPA2jP1mA2";
@@ -61,12 +61,12 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
   $("active").classList.toggle("hidden",finalActivity);
   $("results").classList.toggle("hidden",finalActivity||user?.uid!==PRESENTER_UID);
   if(finalActivity){
-   say(current.status==="open"?"Final reflection is open — submit one commitment.":"Final reflection is closed.");
+   say(current.status==="open"?"Final reflection is open — share two things you learned.":"Final reflection is closed.");
    const mine=user?.uid===PRESENTER_UID?null:commitments[user?.uid];
-   $("commitment-text").disabled=!!mine||current.status!=="open";
+   $("learning-one").disabled=!!mine||current.status!=="open";$("learning-two").disabled=!!mine||current.status!=="open";
    $("commitment-submit").disabled=!!mine||current.status!=="open";
-   $("commitment-feedback").textContent=mine?"Thank you! Your commitment was submitted.":current.status==="open"?"No names or student data, please.":"Submissions have closed.";
-   if(user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" commitments received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent="From my next assessment, I will "+v;list.append(p)})}
+   $("commitment-feedback").textContent=mine?"Thank you! Your two reflections were submitted.":current.status==="open"?"No names or student data, please.":"Submissions have closed.";
+   if(user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" responses received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent=v;list.append(p)})}
    return;
   }
   $("active").classList.remove("hidden");say(current.status==="open"?"Poll is live — please vote.":"This poll is closed.");
@@ -102,10 +102,10 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  };
  $("commitment-submit").onclick=async()=>{
   if(!user||current?.id!=="topic07"||current.status!=="open")return;
-  const value=$("commitment-text").value.trim();
-  if(value.length<5||value.length>240){$("commitment-feedback").textContent="Please write 5–240 characters.";return}
+  const first=$("learning-one").value.trim(),second=$("learning-two").value.trim();const value="1. "+first+"\n2. "+second;
+  if(first.length<3||second.length<3||value.length>240){$("commitment-feedback").textContent="Please enter both learnings (at least 3 characters each).";return}
   $("commitment-submit").disabled=true;
-  try{await db.ref("commitments/topic07/"+user.uid).set(value);$("commitment-feedback").textContent="Thank you! Commitment submitted."}
+  try{await db.ref("commitments/topic07/"+user.uid).set(value);$("commitment-feedback").textContent="Thank you! Your two reflections were submitted."}
   catch(e){$("commitment-feedback").textContent="Could not submit: "+e.message;$("commitment-submit").disabled=false}
  };
  $("vote").onclick=async()=>{if(!current||selected===null||!user)return;const id=current.id,choice=selected;$("vote").disabled=true;
@@ -115,8 +115,8 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  const updateCurrent=async patch=>{try{await db.ref("session/current").update(patch)}catch(e){$("admin-error").textContent=e.message}};
  const showAdmin=()=>{if(!isPresenter)return;$("login").classList.add("hidden");$("controls").classList.remove("hidden");const list=$("poll-list");list.replaceChildren();
   QUESTIONS.forEach(q=>{const card=document.createElement("div");card.className="poll-card";const t=document.createElement("strong");t.textContent=q.topic+" — "+q.q;
-   const launch=document.createElement("button");launch.className="primary";launch.textContent=q.id==="topic07"?"Open final commitment":"Launch this poll";launch.onclick=()=>setCurrent({id:q.id,status:"open",resultsVisible:false});
-   const close=document.createElement("button");close.className="secondary";close.textContent=q.id==="topic07"?"Close commitments":"End voting";close.onclick=()=>setCurrent({id:q.id,status:"ended",resultsVisible:false});
+   const launch=document.createElement("button");launch.className="primary";launch.textContent=q.id==="topic07"?"Open final reflection":"Launch this poll";launch.onclick=()=>setCurrent({id:q.id,status:"open",resultsVisible:false});
+   const close=document.createElement("button");close.className="secondary";close.textContent=q.id==="topic07"?"Close reflections":"End voting";close.onclick=()=>setCurrent({id:q.id,status:"ended",resultsVisible:false});
    card.append(t,launch,document.createTextNode(" "),close);list.append(card)})};
  $("close-poll").onclick=()=>updateCurrent({status:"ended"});
  $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
