@@ -45,7 +45,7 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  try{
  firebase.initializeApp(conf);
  const auth=firebase.auth(),db=firebase.database();
- let user=null,current=null,selected=null,votes={},allVotes={};
+ let user=null,current=null,selected=null,allVotes={},subscribed=false;
  const optionsFor=id=>QUESTIONS.find(q=>q.id===id);
  const say=(msg,bad=false)=>{const e=$("status");e.textContent=msg;e.classList.toggle("error",bad)};
  const error=e=>{say("Connection error: "+(e?.message||e),true)};
@@ -87,11 +87,11 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
  $("sign-out").onclick=()=>auth.signOut();
  auth.onAuthStateChanged(async u=>{
-  if(u){user=u;$("loading").classList.add("hidden");$("session").classList.remove("hidden");if(isPresenter&&!u.isAnonymous)showAdmin();else if(isPresenter){$("login").classList.remove("hidden");$("controls").classList.add("hidden")};render();return}
+  if(u){user=u;if(!subscribed){subscribed=true;subscribe()}$("loading").classList.add("hidden");$("session").classList.remove("hidden");if(isPresenter&&!u.isAnonymous)showAdmin();else if(isPresenter){$("login").classList.remove("hidden");$("controls").classList.add("hidden")};render();return}
   if(isPresenter){user=null;$("login").classList.remove("hidden");$("controls").classList.add("hidden");$("loading").classList.add("hidden");$("session").classList.add("hidden")}
   else{try{await auth.signInAnonymously()}catch(e){$("loading").classList.add("hidden");$("setup").classList.remove("hidden");$("setup").querySelector("p").textContent="Voting sign-in failed. The presenter may need to enable Anonymous authentication in Firebase. "+e.message}}
  });
- subscribe();
+ // Database listeners begin only after Firebase authentication is ready.
  }catch(e){$("loading").classList.add("hidden");$("setup").classList.remove("hidden");$("setup").querySelector("p").textContent="Firebase connection could not start: "+e.message}
 }
 </script></body></html>
