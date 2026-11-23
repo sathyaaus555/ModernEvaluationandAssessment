@@ -55,7 +55,7 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
    $("active").classList.add("hidden");$("results").classList.add("hidden");say("Waiting for the presenter to launch the next poll…");return;
   }
   const q=optionsFor(current.id);if(!q){say("Unknown question. Please refresh.");return}
-  const finalActivity=current.id==="topic07";
+  const finalActivity=false;
   $("commitment").classList.toggle("hidden",!finalActivity||isPresenter);
   $("commitment-results").classList.toggle("hidden",!finalActivity||!isPresenter||user?.uid!==PRESENTER_UID);
   $("active").classList.toggle("hidden",finalActivity);
@@ -88,7 +88,7 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
     if(voteRef)voteRef.off();if(commitmentRef)commitmentRef.off();voteRef=null;commitmentRef=null;selected=null;allVotes={};commitments={};lastPollId=next?.id||null;
     if(next?.id){
      const presenter=user?.uid===PRESENTER_UID;
-     if(next.id==="topic07"){
+     if(false){
       commitmentRef=db.ref("commitments/topic07"+(presenter?"":"/"+user.uid));
       commitmentRef.on("value",v=>{commitments=presenter?(v.val()||{}):(v.exists()?{[user.uid]:v.val()}:{});render()},error);
      } else {
@@ -115,8 +115,8 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  const updateCurrent=async patch=>{try{await db.ref("session/current").update(patch)}catch(e){$("admin-error").textContent=e.message}};
  const showAdmin=()=>{if(!isPresenter)return;$("login").classList.add("hidden");$("controls").classList.remove("hidden");const list=$("poll-list");list.replaceChildren();
   QUESTIONS.forEach(q=>{const card=document.createElement("div");card.className="poll-card";const t=document.createElement("strong");t.textContent=q.topic+" — "+q.q;
-   const launch=document.createElement("button");launch.className="primary";launch.textContent=q.id==="topic07"?"Open final reflection":"Launch this poll";launch.onclick=()=>setCurrent({id:q.id,status:"open",resultsVisible:false});
-   const close=document.createElement("button");close.className="secondary";close.textContent=q.id==="topic07"?"Hide reflection":"End & hide poll";close.onclick=()=>setCurrent({id:q.id,status:"closed",resultsVisible:false});
+   const launch=document.createElement("button");launch.className="primary";launch.textContent="Launch this poll";launch.onclick=()=>setCurrent({id:q.id,status:"open",resultsVisible:false});
+   const close=document.createElement("button");close.className="secondary";close.textContent="End & hide poll";close.onclick=()=>setCurrent({id:q.id,status:"closed",resultsVisible:false});
    card.append(t,launch,document.createTextNode(" "),close);list.append(card)})};
  $("close-poll").onclick=()=>{if(current?.id)updateCurrent({status:"closed"})};
  $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
