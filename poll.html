@@ -23,7 +23,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-<script src="poll-config.js"></script>
+<script src="poll-config.js?v=20261123b"></script>
 <script>
 "use strict";
 const QUESTIONS=[
@@ -92,8 +92,6 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
    const close=document.createElement("button");close.className="secondary";close.textContent="End voting";close.onclick=()=>setCurrent({id:q.id,status:"ended",resultsVisible:false});
    card.append(t,launch,document.createTextNode(" "),close);list.append(card)})};
  $("close-poll").onclick=()=>updateCurrent({status:"ended"});
- $("reveal").onclick=()=>{$("admin-error").textContent="Results are presenter-only. Share your screen if you want to show them."};
- $("hide-results").onclick=()=>{$("admin-error").textContent="Results are already hidden from participants."};
  $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
  $("sign-out").onclick=()=>auth.signOut();
  auth.onAuthStateChanged(async u=>{
