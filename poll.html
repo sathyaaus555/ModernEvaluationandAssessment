@@ -12,7 +12,7 @@
 <div id="session" class="hidden">
   <div id="status" class="message" role="status" aria-live="polite">Waiting for the first question…</div>
   <section id="active" class="card hidden"><div class="row"><span id="topic" class="pill"></span><span id="phase" class="small muted"></span></div><h2 id="question"></h2><div id="choices" class="options"></div><button id="vote" class="primary" disabled>Submit vote</button><p id="feedback" class="small muted" role="status" aria-live="polite"></p></section>
-  <section id="commitment" class="card hidden"><h2>Two things I learned today</h2><p>Share two useful things you learned from this session.</p><label for="learning-one"><strong>1. First thing I learned</strong></label><textarea id="learning-one" maxlength="110" rows="2" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit;margin:8px 0 18px"></textarea><label for="learning-two"><strong>2. Second thing I learned</strong></label><textarea id="learning-two" maxlength="110" rows="2" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit;margin:8px 0 12px"></textarea><p><button id="commitment-submit" class="primary">Submit my reflections</button></p><p id="commitment-feedback" role="status"></p></section><section id="commitment-results" class="card hidden"><h2>Two things learned · Presenter only</h2><p id="commitment-count"></p><div id="commitment-list"></div></section><section id="results" class="card hidden"><h2>Live results</h2><p id="count" class="muted"></p><div id="bars"></div></section>
+  <section id="commitment" class="card hidden"><h2>Final Reflection</h2><label for="learning-response"><strong>Share any 2 things you learned from today's session.</strong></label><textarea id="learning-response" maxlength="230" rows="5" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit;margin:12px 0" placeholder="1.&#10;2."></textarea><p><button id="commitment-submit" class="primary">Submit my response</button></p><p id="commitment-feedback" role="status"></p></section><section id="commitment-results" class="card hidden"><h2>Final reflections · Presenter only</h2><p id="commitment-count"></p><div id="commitment-list"></div></section><section id="results" class="card hidden"><h2>Live results</h2><p id="count" class="muted"></p><div id="bars"></div></section>
 </div>
 <section id="presenter" class="card hidden"><div class="row" style="justify-content:space-between"><h2>Presenter controls</h2><span class="pill">Host only</span></div>
 <div id="login"><p>Sign in using the presenter account configured in Firebase.</p><div class="row"><input id="email" type="email" placeholder="Presenter email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="sign-in" class="primary">Sign in</button></div></div>
@@ -63,7 +63,7 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
   if(finalActivity){
    say(current.status==="open"?"Final reflection is open — share two things you learned.":"Final reflection is closed.");
    const mine=user?.uid===PRESENTER_UID?null:commitments[user?.uid];
-   $("learning-one").disabled=!!mine||current.status!=="open";$("learning-two").disabled=!!mine||current.status!=="open";
+   $("learning-response").disabled=!!mine||current.status!=="open";
    $("commitment-submit").disabled=!!mine||current.status!=="open";
    $("commitment-feedback").textContent=mine?"Thank you! Your two reflections were submitted.":current.status==="open"?"No names or student data, please.":"Submissions have closed.";
    if(user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" responses received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent=v;list.append(p)})}
@@ -102,8 +102,8 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
  };
  $("commitment-submit").onclick=async()=>{
   if(!user||current?.id!=="topic07"||current.status!=="open")return;
-  const first=$("learning-one").value.trim(),second=$("learning-two").value.trim();const value="1. "+first+"\n2. "+second;
-  if(first.length<3||second.length<3||value.length>240){$("commitment-feedback").textContent="Please enter both learnings (at least 3 characters each).";return}
+  const value=$("learning-response").value.trim();
+  if(value.length<5||value.length>230){$("commitment-feedback").textContent="Please share two things you learned (5–230 characters).";return}
   $("commitment-submit").disabled=true;
   try{await db.ref("commitments/topic07/"+user.uid).set(value);$("commitment-feedback").textContent="Thank you! Your two reflections were submitted."}
   catch(e){$("commitment-feedback").textContent="Could not submit: "+e.message;$("commitment-submit").disabled=false}
