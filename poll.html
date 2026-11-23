@@ -57,16 +57,16 @@ if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
   const q=optionsFor(current.id);if(!q){say("Unknown question. Please refresh.");return}
   const finalActivity=current.id==="topic07";
   $("commitment").classList.toggle("hidden",!finalActivity||isPresenter);
-  $("commitment-results").classList.toggle("hidden",!finalActivity||user?.uid!==PRESENTER_UID);
+  $("commitment-results").classList.toggle("hidden",!finalActivity||!isPresenter||user?.uid!==PRESENTER_UID);
   $("active").classList.toggle("hidden",finalActivity);
   $("results").classList.toggle("hidden",finalActivity||user?.uid!==PRESENTER_UID);
   if(finalActivity){
    say(current.status==="open"?"Final reflection is open — share two things you learned.":"Final reflection is closed.");
-   const mine=user?.uid===PRESENTER_UID?null:commitments[user?.uid];
+   const mine=isPresenter&&user?.uid===PRESENTER_UID?null:commitments[user?.uid];
    $("learning-response").disabled=!!mine||current.status!=="open";
    $("commitment-submit").disabled=!!mine||current.status!=="open";
    $("commitment-feedback").textContent=mine?"Thank you! Your two reflections were submitted.":current.status==="open"?"":"Submissions have closed.";
-   if(user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" responses received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent=v;list.append(p)})}
+   if(isPresenter&&user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" responses received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent=v;list.append(p)})}
    return;
   }
   $("active").classList.remove("hidden");say(current.status==="open"?"Poll is live — please vote.":"This poll is closed.");
