@@ -5,21 +5,11 @@
 :root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#15233c;background:#f4f7fd}*{box-sizing:border-box}body{margin:0}header{background:#10213c;color:white;padding:22px max(20px,calc((100vw - 1060px)/2))}header a{color:#a9f6ed;font-size:14px;text-decoration:none}.brand{font-size:13px;letter-spacing:.13em;font-weight:800;color:#62e5d6}.wrap{max-width:900px;padding:38px 20px 80px;margin:auto}h1{font-size:clamp(32px,5vw,50px);margin:8px 0 12px;line-height:1.1}h2{font-size:25px}p{line-height:1.6}.muted{color:#60718a}.card{background:white;border:1px solid #dee7f5;border-radius:18px;padding:28px;margin:20px 0;box-shadow:0 8px 28px #233c5b0a}.kicker{font-weight:800;color:#2965db;font-size:13px;text-transform:uppercase;letter-spacing:.07em}.options{display:grid;gap:12px;margin:22px 0}.option{padding:18px;text-align:left;border:2px solid #d7e3f2;background:#f8fbff;border-radius:12px;font:inherit;cursor:pointer}.option:hover,.option.selected{border-color:#2568e5;background:#e9f2ff}.option:disabled{cursor:default;opacity:.8}button.primary{background:#2165df;color:white;border:0;border-radius:11px;padding:13px 21px;font-weight:750;font-size:16px;cursor:pointer}button.primary:disabled{opacity:.5;cursor:not-allowed}button.secondary{background:white;color:#1e55b0;border:1px solid #aec7ee;border-radius:11px;padding:12px 16px;font-weight:700;cursor:pointer}button{font-family:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #73c6ec;outline-offset:3px}button.danger{background:#fef1f0;color:#a12828;border:1px solid #f1b7b7;border-radius:10px;padding:10px 14px;cursor:pointer}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.pill{background:#e7f6f0;color:#176e53;border-radius:999px;padding:5px 11px;font-weight:750;font-size:13px}.hidden{display:none!important}.message{padding:15px;border-radius:10px;background:#eaf1ff;color:#174178;margin:15px 0}.error{background:#fff0eb;color:#943b23}.poll-card{border:1px solid #d7e3f2;border-radius:12px;padding:16px;margin:12px 0}.poll-card strong{display:block;margin-bottom:9px}.bar{height:15px;border-radius:20px;background:#e7edf7;overflow:hidden;margin:5px 0 14px}.fill{height:100%;background:#2673dd;transition:width .3s}input{padding:12px;border:1px solid #bdcae1;border-radius:10px;font:inherit;max-width:100%;width:300px}.small{font-size:13px}.foot{font-size:14px;color:#5b6c82;margin-top:30px}@media(max-width:600px){.card{padding:20px}.wrap{padding-top:25px}}
 </style></head><body>
 <header><div class="brand">ASSESSMENT LAB · LIVE PARTICIPATION</div><div class="row" style="justify-content:space-between"><strong>Modern Evaluation & Assessment Frameworks</strong></div></header>
-<div class="wrap"><h1>Live audience polls</h1>
-<p class="muted">Keep this page open during the session. When the presenter launches the next question, it will appear here automatically. Select an option and submit your vote.</p>
-<div id="setup" class="card hidden"><h2>Live polls are not connected yet</h2><p>This page has been added to the presentation, but the presenter must connect a Firebase database before collecting votes. Until then, no votes can be submitted.</p><p class="small muted">Presenter: see <a href="POLL_SETUP.md">POLL_SETUP.md</a> in the GitHub repository.</p></div>
-<div id="loading" class="card"><p>Connecting to the live session…</p></div>
-<div id="session" class="hidden">
-  <div id="status" class="message" role="status" aria-live="polite">Waiting for the first question…</div>
-  <section id="active" class="card hidden"><div class="row"><span id="topic" class="pill"></span><span id="phase" class="small muted"></span></div><h2 id="question"></h2><div id="choices" class="options"></div><button id="vote" class="primary" disabled>Submit vote</button><p id="feedback" class="small muted" role="status" aria-live="polite"></p></section>
-  <section id="commitment" class="card hidden"><h2>Final Reflection</h2><label for="learning-response"><strong>Share any 2 things you learned from today's session.</strong></label><textarea id="learning-response" maxlength="230" rows="5" style="width:100%;padding:14px;border:1px solid #bdcae1;border-radius:10px;font:inherit;margin:12px 0" placeholder="1.&#10;2."></textarea><p><button id="commitment-submit" class="primary">Submit my response</button></p><p id="commitment-feedback" role="status"></p></section><section id="commitment-results" class="card hidden"><h2>Final reflections · Presenter only</h2><p id="commitment-count"></p><div id="commitment-list"></div></section><section id="results" class="card hidden"><h2>Live results</h2><p id="count" class="muted"></p><div id="bars"></div></section>
-</div>
-<section id="presenter" class="card hidden"><div class="row" style="justify-content:space-between"><h2>Presenter controls</h2><span class="pill">Host only</span></div>
-<div id="login"><p>Sign in using the presenter account configured in Firebase.</p><div class="row"><input id="email" type="email" placeholder="Presenter email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="sign-in" class="primary">Sign in</button></div></div>
-<div id="controls" class="hidden"><p class="muted">Participants see only the question you launch. Use End & hide poll after each topic to return their screen to Waiting for the presenter.</p><div id="poll-list"></div><div class="row"><button id="close-poll" class="secondary">Hide current poll</button><button id="sign-out" class="danger">Sign out</button></div></div>
-<p id="admin-error" class="small" role="alert"></p></section>
-
-</div>
+<div class="wrap"><h1>Final knowledge check</h1><p id="intro" class="muted">When the presenter launches the poll, answer all five questions and submit your answers together.</p>
+<div id="status" class="message" role="status" aria-live="polite">Connecting…</div>
+<section id="presenter" class="card hidden"><h2>Presenter controls</h2><div id="login"><input id="email" type="email" placeholder="Presenter email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="sign-in" class="primary">Sign in</button></div><div id="controls" class="hidden"><div class="row"><button id="launch" class="primary">Launch poll</button><button id="close" class="secondary">End & hide poll</button><button id="sign-out" class="danger">Sign out</button></div></div></section>
+<section id="participant" class="hidden"><form id="questionnaire"><div id="questions"></div><button id="submit" class="primary" disabled>Submit answers</button></form><p id="feedback" role="status"></p></section>
+<section id="results" class="card hidden"><h2>Live results</h2><p id="count"></p><div id="bars"></div></section></div>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
@@ -27,106 +17,42 @@
 <script>
 "use strict";
 const QUESTIONS=[
-{id:"topic01",topic:"Topic 01 · Modern Assessment",q:"Which type of assessment helps identify learning gaps during the learning process?",options:["Formative Assessment","Summative Assessment"]},
-{id:"topic02",topic:"Topic 02 · AI Capabilities",q:"An AI-generated answer sounds confident. What should we do?",options:["Trust it because it is fluent","Verify it against reliable course material"]},
-{id:"topic03",topic:"Topic 03 · Assessment Creation",q:"Which prompt is more likely to generate a useful, well-structured assessment?",options:["Create five questions about Python.","Act as an assessment designer. For first-year Python students, create three Apply-level MCQs on for-loops, using only basic Python, with answers and explanations in a table."]},
-{id:"topic04",topic:"Topic 04 · Evaluating Output",q:"An AI-generated assessment question includes a fact you are unsure about. What should you do?",options:["Trust it because AI sounds confident.","Verify the fact using reliable sources before using the question."]},
-{id:"topic05",topic:"Topic 05 · Responsible AI",q:"Before sharing any information with an AI tool, what should you consider first?",options:["Whether the AI tool can generate a quick response.","Whether the information is safe to share and complies with institutional policies."]},
-{id:"topic06",topic:"Topic 06 · Improving Quality",q:"An AI-generated assessment question is too generic. What is the best way to improve it?",options:["Keep regenerating the question without changing anything.","Identify what's missing, refine the relevant instructions, and evaluate the new output."]},
-{id:"topic07",topic:"Topic 07 · Final Knowledge Check",q:"You are using AI to create assessment questions. Which approach best reflects responsible and effective AI-assisted assessment?",options:["Use AI-generated questions directly to save time.","Provide clear instructions, review the output, verify accuracy, and refine it before use.","Keep regenerating questions until the output looks impressive."]}
+{id:"topic01",q:"Which type of assessment helps identify learning gaps during the learning process?",options:["Formative Assessment","Summative Assessment"]},
+{id:"topic02",q:"An AI-generated answer sounds confident. What should we do?",options:["Trust it because it is fluent","Verify it against reliable course material"]},
+{id:"topic03",q:"Which prompt is more likely to generate a useful, well-structured assessment?",options:["Create five questions about Python.","Act as an assessment designer. For first-year Python students, create three Apply-level MCQs on for-loops, using only basic Python, with answers and explanations in a table."]},
+{id:"topic04",q:"An AI-generated assessment question includes a fact you are unsure about. What should you do?",options:["Trust it because AI sounds confident.","Verify the fact using reliable sources before using the question."]},
+{id:"topic05",q:"Before sharing any information with an AI tool, what should you consider first?",options:["Whether the AI tool can generate a quick response.","Whether the information is safe to share and complies with institutional policies."]}
 ];
-const $=id=>document.getElementById(id);
+
 const PRESENTER_UID="4Tl4luSiUCN2KHBmtjUPA2jP1mA2";
+const $=id=>document.getElementById(id);
 const isPresenter=new URLSearchParams(location.search).has("presenter");
-if(isPresenter)$("presenter").classList.remove("hidden");
+const POLL="final05";
 const conf=window.ASSESSMENT_POLL_FIREBASE;
-if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){
- $("loading").classList.add("hidden");$("setup").classList.remove("hidden");
-}else{
- try{
- firebase.initializeApp(conf);
- const auth=firebase.auth(),db=firebase.database();
- let user=null,current=null,selected=null,allVotes={},subscribed=false,commitmentRef=null,commitments={};
- const optionsFor=id=>QUESTIONS.find(q=>q.id===id);
- const say=(msg,bad=false)=>{const e=$("status");e.textContent=msg;e.classList.toggle("error",bad)};
- const error=e=>{say("Connection error: "+(e?.message||e),true)};
- const render=()=>{
-  if(!current||!current.id||current.status==="closed"){ $("commitment").classList.add("hidden");$("commitment-results").classList.add("hidden");
-   $("active").classList.add("hidden");$("results").classList.add("hidden");say("Waiting for the presenter to launch the next poll…");return;
-  }
-  const q=optionsFor(current.id);if(!q){say("Unknown question. Please refresh.");return}
-  const finalActivity=false;
-  $("commitment").classList.toggle("hidden",!finalActivity||isPresenter);
-  $("commitment-results").classList.toggle("hidden",!finalActivity||!isPresenter||user?.uid!==PRESENTER_UID);
-  $("active").classList.toggle("hidden",finalActivity);
-  $("results").classList.toggle("hidden",finalActivity||user?.uid!==PRESENTER_UID);
-  if(finalActivity){
-   say(current.status==="open"?"Final reflection is open — share two things you learned.":"Final reflection is closed.");
-   const mine=isPresenter&&user?.uid===PRESENTER_UID?null:commitments[user?.uid];
-   $("learning-response").disabled=!!mine||current.status!=="open";
-   $("commitment-submit").disabled=!!mine||current.status!=="open";
-   $("commitment-feedback").textContent=mine?"Thank you! Your two reflections were submitted.":current.status==="open"?"":"Submissions have closed.";
-   if(isPresenter&&user?.uid===PRESENTER_UID){const vals=Object.values(commitments);$("commitment-count").textContent=vals.length+" responses received";const list=$("commitment-list");list.replaceChildren();vals.forEach(v=>{const p=document.createElement("p");p.className="poll-card";p.textContent=v;list.append(p)})}
-   return;
-  }
-  $("active").classList.remove("hidden");say(current.status==="open"?"Poll is live — please vote.":"This poll is closed.");
-  $("topic").textContent=q.topic;$("question").textContent=q.q;$("phase").textContent=current.status==="open"?"Voting open":"Voting closed";
-  const oldChoice=selected;const myVote=user?(user.uid===PRESENTER_UID?undefined:allVotes[user.uid]):undefined;const box=$("choices");box.replaceChildren();
-  q.options.forEach((option,i)=>{const b=document.createElement("button");b.type="button";b.className="option"+((myVote===String(i)||myVote===undefined&&oldChoice===String(i))?" selected":"");b.textContent=String.fromCharCode(65+i)+". "+option;
-   b.disabled=!!myVote||current.status!=="open";b.onclick=()=>{selected=String(i);render()};box.append(b)});
-  $("vote").disabled=!!myVote||selected===null||current.status!=="open";
-  $("feedback").textContent=myVote!==undefined?"Your vote was submitted. Thank you!":current.status==="open"?"Choose one answer, then Submit vote.":"Voting has ended.";
-  const canSee=isPresenter&&user?.uid===PRESENTER_UID;
-  $("results").classList.toggle("hidden",!canSee);
-  if(canSee){const counts=q.options.map((_,i)=>Object.values(allVotes).filter(v=>v===String(i)).length),total=Object.values(allVotes).length;$("count").textContent=total+" vote"+(total===1?"":"s")+" received";
-   const bars=$("bars");bars.replaceChildren();q.options.forEach((opt,i)=>{const row=document.createElement("div"),label=document.createElement("div"),bar=document.createElement("div"),fill=document.createElement("div");label.textContent=String.fromCharCode(65+i)+". "+opt+" — "+(total?Math.round(counts[i]*100/total):0)+"% ("+counts[i]+")";bar.className="bar";fill.className="fill";fill.style.width=(total?counts[i]*100/total:0)+"%";bar.append(fill);row.append(label,bar);bars.append(row)})}
- };
- let voteRef=null, lastPollId=null;
- const subscribe=()=>{
-  db.ref("session/current").on("value",snap=>{const next=snap.val();
-   if(next?.id!==lastPollId){
-    if(voteRef)voteRef.off();if(commitmentRef)commitmentRef.off();voteRef=null;commitmentRef=null;selected=null;allVotes={};commitments={};lastPollId=next?.id||null;
-    if(next?.id){
-     const presenter=user?.uid===PRESENTER_UID;
-     if(false){
-      commitmentRef=db.ref("commitments/topic07"+(presenter?"":"/"+user.uid));
-      commitmentRef.on("value",v=>{commitments=presenter?(v.val()||{}):(v.exists()?{[user.uid]:v.val()}:{});render()},error);
-     } else {
-     voteRef=db.ref("votes/"+next.id+(presenter?"":"/"+user.uid));
-     voteRef.on("value",v=>{allVotes=presenter?(v.val()||{}):(v.exists()?{[user.uid]:v.val()}:{});render()},error);
-     }
-    }
-   }
-   current=next;render();
-  },error);
- };
- $("commitment-submit").onclick=async()=>{
-  if(!user||current?.id!=="topic07"||current.status!=="open")return;
-  const value=$("learning-response").value.trim();
-  if(value.length<5||value.length>230){$("commitment-feedback").textContent="Please share two things you learned (5–230 characters).";return}
-  $("commitment-submit").disabled=true;
-  try{await db.ref("commitments/topic07/"+user.uid).set(value);$("commitment-feedback").textContent="Thank you! Your two reflections were submitted."}
-  catch(e){$("commitment-feedback").textContent="Could not submit: "+e.message;$("commitment-submit").disabled=false}
- };
- $("vote").onclick=async()=>{if(!current||selected===null||!user)return;const id=current.id,choice=selected;$("vote").disabled=true;
-  try{const check=await db.ref("session/current").once("value");if(check.val()?.id!==id||check.val()?.status!=="open")throw Error("This poll is no longer open.");
-   await db.ref("votes/"+id+"/"+user.uid).set(choice);$("feedback").textContent="Vote submitted!"}catch(e){$("feedback").textContent="Could not submit vote: "+e.message}render()};
- const setCurrent=async value=>{try{await db.ref("session/current").set(value)}catch(e){$("admin-error").textContent=e.message}};
- const updateCurrent=async patch=>{try{await db.ref("session/current").update(patch)}catch(e){$("admin-error").textContent=e.message}};
- const showAdmin=()=>{if(!isPresenter)return;$("login").classList.add("hidden");$("controls").classList.remove("hidden");const list=$("poll-list");list.replaceChildren();
-  QUESTIONS.forEach(q=>{const card=document.createElement("div");card.className="poll-card";const t=document.createElement("strong");t.textContent=q.topic+" — "+q.q;
-   const launch=document.createElement("button");launch.className="primary";launch.textContent="Launch this poll";launch.onclick=()=>setCurrent({id:q.id,status:"open",resultsVisible:false});
-   const close=document.createElement("button");close.className="secondary";close.textContent="End & hide poll";close.onclick=()=>setCurrent({id:q.id,status:"closed",resultsVisible:false});
-   card.append(t,launch,document.createTextNode(" "),close);list.append(card)})};
- $("close-poll").onclick=()=>{if(current?.id)updateCurrent({status:"closed"})};
- $("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){$("admin-error").textContent=e.message}};
- $("sign-out").onclick=()=>auth.signOut();
- auth.onAuthStateChanged(async u=>{
-  if(u){user=u;if(!subscribed){subscribed=true;subscribe()}$("loading").classList.add("hidden");$("session").classList.remove("hidden");if(isPresenter&&u.uid===PRESENTER_UID)showAdmin();else if(isPresenter){$("login").classList.remove("hidden");$("controls").classList.add("hidden")};render();return}
-  if(isPresenter){user=null;$("login").classList.remove("hidden");$("controls").classList.add("hidden");$("loading").classList.add("hidden");$("session").classList.add("hidden")}
-  else{try{await auth.signInAnonymously()}catch(e){$("loading").classList.add("hidden");$("setup").classList.remove("hidden");$("setup").querySelector("p").textContent="Voting sign-in failed. The presenter may need to enable Anonymous authentication in Firebase. "+e.message}}
- });
- // Database listeners begin only after Firebase authentication is ready.
- }catch(e){$("loading").classList.add("hidden");$("setup").classList.remove("hidden");$("setup").querySelector("p").textContent="Firebase connection could not start: "+e.message}
+const say=(s,bad=false)=>{$("status").textContent=s;$("status").classList.toggle("error",bad)};
+const show=(id,on)=>$(id).classList.toggle("hidden",!on);
+if(isPresenter){show("presenter",true);$("intro").textContent="Launch all five questions together and view live responses."}
+if(!conf||!conf.apiKey||conf.apiKey==="REPLACE_ME"){say("Firebase is not configured.",true)}else{
+try{
+firebase.initializeApp(conf);const auth=firebase.auth(),db=firebase.database();
+let user=null,current=null,votes={},mine=null,ready=false,busy=false,sessionRef=null,voteRef=null;
+const host=()=>isPresenter&&user?.uid===PRESENTER_UID;
+const open=()=>current?.id===POLL&&current.status==="open";
+const inputs=()=>Array.from(document.querySelectorAll("#questions input"));
+QUESTIONS.forEach((q,i)=>{const field=document.createElement("fieldset");field.className="card";field.style.minWidth="0";const legend=document.createElement("legend");legend.style.fontWeight="750";legend.textContent=(i+1)+". "+q.q;field.append(legend);q.options.forEach((opt,j)=>{const label=document.createElement("label");label.className="option";label.style.display="flex";label.style.alignItems="flex-start";label.style.gap="12px";label.style.margin="10px 0";const input=document.createElement("input");input.type="radio";input.name="q"+i;input.value=String(j);input.required=true;input.style.width="auto";input.style.flexShrink="0";label.append(input,document.createTextNode(String.fromCharCode(65+j)+". "+opt));field.append(label)});$("questions").append(field)});
+const answers=()=>QUESTIONS.map((q,i)=>document.querySelector('input[name="q'+i+'"]:checked')?.value);
+function render(){
+ const live=open();show("participant",!isPresenter&&live);show("results",host()&&current?.id===POLL);
+ say(!user?"Sign in to continue.":live?"Poll is live.":current?.id===POLL?"Poll is closed.":"Waiting for the presenter to launch the poll…");
+ if(!isPresenter&&live){if(mine){inputs().forEach(x=>{x.checked=mine[Number(x.name.slice(1))]===x.value});$("feedback").textContent="Thank you! Your answers have been submitted."}inputs().forEach(x=>x.disabled=!!mine||busy||!ready);$("submit").disabled=!!mine||busy||!ready||answers().some(x=>x===undefined)}
+ if(host()){ $("launch").disabled=live; $("close").disabled=!live;const vals=Object.values(votes).filter(v=>typeof v==="string"&&/^[01]{5}$/.test(v));$("count").textContent=vals.length+" completed responses";const bars=$("bars");bars.replaceChildren();QUESTIONS.forEach((q,i)=>{const card=document.createElement("div");card.className="poll-card";const title=document.createElement("strong");title.textContent=(i+1)+". "+q.q;card.append(title);q.options.forEach((opt,j)=>{const n=vals.filter(v=>v[i]===String(j)).length,p=vals.length?Math.round(n*100/vals.length):0;const label=document.createElement("div");label.textContent=String.fromCharCode(65+j)+". "+opt+" — "+p+"% ("+n+")";const bar=document.createElement("div"),fill=document.createElement("div");bar.className="bar";fill.className="fill";fill.style.width=p+"%";bar.append(fill);card.append(label,bar)});bars.append(card)})}
 }
+$("questionnaire").onchange=render;
+$("questionnaire").onsubmit=async e=>{e.preventDefault();if(!open()||!user||mine||busy||!ready)return;const a=answers();if(a.some(x=>x===undefined))return;busy=true;render();try{await db.ref("votes/"+POLL+"/"+user.uid).set(a.join(""));mine=a.join("");$("feedback").textContent="Thank you! Your answers have been submitted."}catch(e){$("feedback").textContent="Could not submit: "+e.message}finally{busy=false;render()}};
+$("launch").onclick=async()=>{try{await db.ref("session/current").set({id:POLL,status:"open",resultsVisible:false})}catch(e){say(e.message,true)}};
+$("close").onclick=async()=>{try{await db.ref("session/current").update({status:"closed"})}catch(e){say(e.message,true)}};
+$("sign-in").onclick=async()=>{try{await auth.signInWithEmailAndPassword($("email").value,$("password").value)}catch(e){say(e.message,true)}};
+$("sign-out").onclick=()=>auth.signOut();
+auth.onAuthStateChanged(async u=>{if(sessionRef)sessionRef.off();if(voteRef)voteRef.off();user=u;current=null;votes={};mine=null;ready=false;busy=false;show("controls",host());show("login",!host());if(!u){render();if(!isPresenter){try{await auth.signInAnonymously()}catch(e){say(e.message,true)}}return}if(isPresenter&&!host()){say("Sign in with the authorised presenter account.",true);return}sessionRef=db.ref("session/current");sessionRef.on("value",s=>{current=s.val();render()},e=>say(e.message,true));voteRef=db.ref("votes/"+POLL+(host()?"":"/"+u.uid));voteRef.on("value",s=>{if(host())votes=s.val()||{};else mine=s.val();ready=true;render()},e=>say(e.message,true));render()});
+}catch(e){say(e.message,true)}}
 </script></body></html>
